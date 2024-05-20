@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import express, { Express } from "express";
-import { insertIot } from "./src/iot";
+import { getAllIotData, insertIot } from "./src/iot";
+import { getAllIncident } from "./src/incident";
 
 
 
@@ -12,15 +13,9 @@ app.use(express.json())
 
 app.post('/iot', insertIot)
 
-app.get('/iot', async (req,res)=>{
-    const alldata = await prisma.iotMeasurement.findMany()
-    res.json(alldata)
-})
+app.get('/iot',getAllIotData)
 
-app.get('/incident', async (req,res)=>{
-    const alldata = await prisma.incident.findMany()
-    res.json(alldata)
-})
+app.get('/incident', getAllIncident)
 
 app.listen(port,()=>{
     console.log("Listening on port ", port)

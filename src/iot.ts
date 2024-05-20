@@ -12,7 +12,7 @@ export async function insertIot(req:Request,res:Response){
         }
     })
 
-    const responseFromAI = await fetch('http://localhost:8080/classify',{
+    const responseFromAI = await fetch('https://dummy-ai-chi.vercel.app/classify',{
         method:'POST',
         body:body
     })
@@ -31,6 +31,10 @@ export async function insertIot(req:Request,res:Response){
         })
 
     }
-
     res.send("OK")
+}
+
+export async function getAllIotData(req:Request,res:Response){
+    const alldata = await prisma.iotMeasurement.findMany()
+    res.json(alldata)
 }
