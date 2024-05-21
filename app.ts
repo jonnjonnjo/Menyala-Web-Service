@@ -1,7 +1,8 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import express, { Express } from "express";
+import express from "express";
 import { getAllIotData, insertIot } from "./src/iot";
 import { getAllIncident } from "./src/incident";
+import router from "./src/user";
 
 
 
@@ -16,6 +17,8 @@ app.post('/iot', insertIot)
 app.get('/iot',getAllIotData)
 
 app.get('/incident', getAllIncident)
+
+app.use('/user/',router);
 
 app.listen(port,()=>{
     console.log("Listening on port ", port)
