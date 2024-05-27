@@ -1,4 +1,4 @@
-import { Response } from "node-fetch";
+
 import { prisma } from "../app";
 import { Request, Response } from "express";
 
@@ -42,5 +42,5 @@ export async function getAllIotData(req:Request,res:Response){
 
 
 export async function getWeeklyData(req:Request,res:Response){
-    
+
 }
