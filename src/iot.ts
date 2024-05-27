@@ -1,3 +1,4 @@
+import { Response } from "node-fetch";
 import { prisma } from "../app";
 import { Request, Response } from "express";
 
@@ -37,4 +38,9 @@ export async function insertIot(req:Request,res:Response){
 export async function getAllIotData(req:Request,res:Response){
     const alldata = await prisma.iotMeasurement.findMany()
     res.json(alldata)
+}
+
+
+export async function getWeeklyData(req:Request,res:Response){
+    
 }

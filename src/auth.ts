@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { prisma } from "../app";
 
-const supabase = createClient(
+export const supabase = createClient(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
 );  
@@ -27,8 +27,6 @@ export async function login(email:string, password:string){
         email,
         password
     })
-
-
 
     if(error){
         return {
