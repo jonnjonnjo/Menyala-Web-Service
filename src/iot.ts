@@ -88,18 +88,25 @@ type sendData = {
 };
 
 iotRouter.get('/data', async (req: Request, res: Response) => {
-	const getAllCam = await supabase.from('IoTCam').select().order('id', { ascending: false });
+	const { date } = req.query;
+	let queryDate: Date | null = null;
 
+	if (date) {
+		queryDate = new Date(parseInt(date as string));
+		console.log(queryDate);
+		console.log('day:', queryDate.getDate());
+		console.log('month:', queryDate.getMonth());
+		console.log('year:', queryDate.getFullYear());
+	}
+
+	const getAllCam = await supabase.from('IoTCam').select().order('id', { ascending: false });
 	const camData = getAllCam.data;
 
 	const getAllGasTemp = await supabase
 		.from('IoTGasTemperature')
 		.select()
 		.order('id', { ascending: false });
-
 	const gasTempData = getAllGasTemp.data;
-
-	const minim = Math.min(camData?.length || 0, gasTempData?.length || 0, 10);
 
 	const allIncident = await supabase.from('Incident').select();
 
@@ -123,27 +130,35 @@ iotRouter.get('/data', async (req: Request, res: Response) => {
 		});
 	}
 
-	for (let i = 0; i < minim; i++) {
+	for (let i = 0; i < camData.length && i < gasTempData.length; i++) {
 		const cd = camData[i];
 		const gt = gasTempData[i];
 
 		if (cd && gt) {
-			// find incident
+			// Filter by date if queryDate is provided
+			if (queryDate) {
+				const camDate = new Date(cd.created_at);
+				const gasTempDate = new Date(gt.created_at);
 
-			let exist = false;
+				const isSameDay = (date1: Date, date2: Date) =>
+					date1.getDate() === date2.getDate() &&
+					date1.getMonth() === date2.getMonth() &&
+					date1.getFullYear() === date2.getFullYear();
 
-			for (
-				let j = 0;
-				j < (allIncident.data?.length === undefined ? 0 : allIncident.data.length);
-				j++
-			) {
-				if (allIncident.data === null) {
-					break;
-				}
-				if (allIncident.data[j].iotCamId == cd.id) {
-					exist = true;
+				if (!isSameDay(queryDate, camDate) || !isSameDay(queryDate, gasTempDate)) {
+					continue;
 				}
 			}
+
+			// find incident
+			let exist = false;
+			for (let j = 0; j < (allIncident.data?.length ?? 0); j++) {
+				if (allIncident.data![j].iotCamId == cd.id) {
+					exist = true;
+					break;
+				}
+			}
+
 			const toPush = {
 				gas: gt.gas,
 				temperature: gt.temperature,
