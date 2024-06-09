@@ -35,7 +35,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
 	const { access_token, refresh_token } = req.cookies;
 
 	if (!access_token || !refresh_token) {
-		res.send(401).json({
+		return res.status(401).json({
 			error: 'Unauthorized - No Access Token',
 		});
 	}
@@ -47,7 +47,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
 		});
 
 		if (error) {
-			res.status(401).json({
+			return res.status(401).json({
 				error: error,
 				access_token,
 			});
@@ -55,7 +55,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
 			next();
 		}
 	} catch (err) {
-		res.status(401).json({
+		return res.status(401).json({
 			error: err,
 		});
 	}

@@ -19,9 +19,9 @@ router.post('/login/', async (req, res) => {
 	if (accessToken) {
 		res.cookie('access_token', accessToken, cookieOptions);
 		res.cookie('refresh_token', refreshToken, cookieOptions);
-		res.status(200).json(result);
+		return res.status(200).json(result);
 	} else {
-		res.status(401).json({
+		return res.status(401).json({
 			error: 'Unauthorized',
 		});
 	}
@@ -30,7 +30,7 @@ router.post('/login/', async (req, res) => {
 router.post('/register/', async (req, res) => {
 	const body = req.body;
 	const result = await register(body.email, body.password);
-	res.json(result);
+	return res.json(result);
 });
 
 export default router;
