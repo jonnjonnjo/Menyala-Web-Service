@@ -1,5 +1,5 @@
 import express, { CookieOptions } from 'express';
-import { register, login } from './auth';
+import { register, login, authMiddleware } from './auth';
 
 const router = express.Router();
 
@@ -34,10 +34,11 @@ router.post('/login/', async (req,res)=>{
 
 router.post('/register/', async (req,res)=>{
     const body = req.body;
-
     const result = await register(body.email,body.password);
     res.json(result)
 })
+
+
 
 
 export default router;
