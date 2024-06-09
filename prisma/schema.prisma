@@ -13,17 +13,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model IotMeasurement {
+model iotCam{
   id           Int      @id @default(autoincrement())
-  temperature  Float
   base64Encode String
-  gas          Int
-  createdAt    DateTime @default(now())
-  incidents    Incident?
+  createdAt DateTime @default(now())
+  incidents Incident?
+}
+
+model iotGasTemperature {
+  id        Int @id @default(autoincrement())
+  temperature Float
+  gas Int
 }
 
 model Incident {
   id        Int            @id @default(autoincrement())
-  measure   IotMeasurement @relation(fields: [measureId], references: [id])
+  measure   iotCam @relation(fields: [measureId], references: [id])
   measureId Int            @unique
 }

@@ -17,10 +17,6 @@ app.use(cookieParser())
 
 app.post('/iot', insertIot)  // This is for geting the data from the iot device
 
-app.get('/iot',getAllIotData) // this is for fetching all data in database in table iotperformance
- 
-app.get('/incident', getAllIncident) // this is for fetching all data in database in table incident
-
 app.use('/user/',router); // this is for user registration and login
 
 app.get('/iot-data',authMiddleware, getWeeklyData)
