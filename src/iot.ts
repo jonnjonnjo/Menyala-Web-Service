@@ -87,7 +87,7 @@ type sendData = {
 	incident: boolean;
 };
 
-iotRouter.get('/data', authMiddleware, async (req: Request, res: Response) => {
+iotRouter.get('/data', async (req: Request, res: Response) => {
 	const getAllCam = await supabase.from('IoTCam').select().order('id', { ascending: false });
 
 	const camData = getAllCam.data;
