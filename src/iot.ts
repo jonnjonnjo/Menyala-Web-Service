@@ -99,7 +99,7 @@ iotRouter.get('/data', async (req: Request, res: Response) => {
 
 	const gasTempData = getAllGasTemp.data;
 
-	const minim = Math.min(camData?.length || 0, gasTempData?.length || 0, 120960);
+	const minim = Math.min(camData?.length || 0, gasTempData?.length || 0, 10);
 
 	const allIncident = await supabase.from('Incident').select();
 
