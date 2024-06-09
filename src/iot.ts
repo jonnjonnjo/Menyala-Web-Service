@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import express from 'express';
 import multer from 'multer';
 import { supabase } from './supabase/supabase';
+import { authMiddleware } from './auth';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -51,95 +52,27 @@ iotRouter.post('/iot-cam', upload.single('imageFile'), async (req: Request, res:
 	return res.status(201).send('Image succesfully uploaded and logged.');
 });
 
-/*
-export async function insertIot(req:Request,res:Response){
-    const body = req.body;
-    
-    const data = await prisma.iotMeasurement.create({
-        data: {
-            temperature:body.temperature,
-            base64Encode:body.base64encode,
-            gas:body.gas,
-        }
-    })
+iotRouter.post("/iot-gas-temperature",async(req:Request,res:Response)=>{
+	const {gas,temperature} = req.body;
 
-	const responseFromAI = await fetch('https://dummy-ai-chi.vercel.app/classify', {
-		method: 'POST',
-		body: body,
-	});
-
-	const dataFromAI = await responseFromAI.json();
-
-	if (dataFromAI.result === 0) {
-		// no incident
-	} else {
-		// there is incident
-		// insert it
-		const incidentData = await prisma.incident.create({
-			data: {
-				measureId: data.id,
-			},
-		});
-	}
-	res.send('OK');
-}
-
-export async function getAllIotData(req: Request, res: Response) {
-	const alldata = await prisma.iotMeasurement.findMany();
-	res.json(alldata);
-}
-
-export async function getWeeklyData(req: Request, res: Response) {
-	res.json({
-		message: 'Not implemented yet',
-	});
-}
-
-*/
-
-type iotMeasurement = {
-	id: number;
-	temperature: number;
-	base64Encode: string;
-	gas: number;
-	createdAt: Date;
-};
-
-export async function getWeeklyData(req: Request, res: Response) {
-	const getData = await prisma.iotMeasurement.findMany({
-		take: 120960,
-
-		orderBy: {
-			createdAt: 'desc',
-		},
-	});
-
-	const getFlagged = await prisma.incident.findMany({
-		take: 120960,
-		orderBy: {
-			id: 'desc',
-		},
-	});
-
-	let newData: (iotMeasurement & { incident: boolean })[] = [];
-
-	for (let i = 0; i < getData.length; i++) {
-		let incident = false;
-		for (let j = 0; j < getFlagged.length; j++) {
-			console.log(getData[i], getFlagged[j]);
-
-			if (getData[i].id == getFlagged[j].measureId) {
-				incident = true;
-			}
-		}
-
-		const iotMeasurementData = getData[i] as iotMeasurement;
-
-		newData.push({
-			...iotMeasurementData, // Spread the properties from the original measurement object
-			incident: incident,
-		});
+	if(!gas || !temperature){
+		res.status(400).json({message:"There is no gas / temperature"})
 	}
 
-	return res.json(newData);
-}
+	// insert gas
+	const data = await supabase.from("IoTGasTemperature").insert({
+		gas,
+		temperature
+	})
+
+
+	if(data){
+		res.status(200).json({message:"succes"})
+	}else{
+		res.status(400).json({message:"error"})
+	}
+})
+
+iotRouter.get("/data",authMiddleware,async(req:Request,res:Response)=>{
+	const getAllCam
+})
