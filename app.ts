@@ -15,7 +15,7 @@ app.use(cookieParser());
 
 //app.post('/iot', insertIot)  // This is for geting the data from the iot device
 
-app.use('/iot', iotRouter);
+//app.use('/iot', iotRouter);
 
 app.use('/user', router); // this is for user registration and login
 
