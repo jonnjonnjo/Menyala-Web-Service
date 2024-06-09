@@ -16,11 +16,39 @@ iotRouter.post('/iot-cam', upload.single('imageFile'), async (req: Request, res:
 	const file = req.file;
 	const base64Data = file.buffer.toString('base64');
 
-	const { error } = await supabase.from('IoTCam').insert({ base64Encode: base64Data });
+	const { data, error } = await supabase
+		.from('IoTCam')
+		.insert({ base64Encode: base64Data })
+		.select('id')
+		.single();
 	if (error) {
 		return res.status(500).send(error);
 	}
-	res.status(201).send('Image uploaded and logged in base64 format.');
+
+	const response = await fetch(`${process.env.AI_MODEL_URL}/predict`, {
+		method: 'POST',
+		body: JSON.stringify({ b64imgstr: base64Data }),
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	});
+	const fazaData: {
+		fire: boolean;
+		confidence?: number;
+		image: string;
+	} = await response.json();
+
+	console.log({
+		fire: fazaData.fire,
+		confidence: fazaData.confidence,
+	});
+
+	if (fazaData.fire) {
+		supabase.from('Incident').insert({ iotCamId: data.id });
+		return res.status(201).send('THERE IS A FIRE! Image and incident succesfully logged.');
+	}
+
+	return res.status(201).send('Image succesfully uploaded and logged.');
 });
 
 /*
