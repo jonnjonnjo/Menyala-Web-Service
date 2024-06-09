@@ -64,8 +64,8 @@ iotRouter.post('/iot-gas-temperature', async (req: Request, res: Response) => {
 	const { data, error } = await supabase
 		.from('IoTGasTemperature')
 		.insert({
-			gas,
-			temperature,
+			gas: parseFloat(gas),
+			temperature: parseFloat(temperature),
 		})
 		.select('*')
 		.single();
