@@ -91,3 +91,6 @@ npm run start
 | 3   | GET        | /iot/data | Menampilkan array of data dari temperature, cam, dan gas |
 | 4   | POST         | /user/login | Melakukan login akun |
 | 5   | POST      | /user/register | Melakukan registrasi akun |
+
+## Deployment
+Web service di-deploy di https://menyala-web-service-production.up.railway.app/
