@@ -1,6 +1,6 @@
-require('dotenv').config();
+import * as dotenv from 'dotenv';
+dotenv.config();
 
-import { Prisma, PrismaClient } from '@prisma/client';
 import express from 'express';
 import router from './src/user';
 import cookieParser from 'cookie-parser';
@@ -10,8 +10,6 @@ import cors from 'cors';
 
 const app = express();
 const PORT = parseInt(process.env.PORT!) || 3000;
-
-export const prisma = new PrismaClient();
 
 app.use(express.json());
 app.use(cookieParser());

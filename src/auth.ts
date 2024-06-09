@@ -1,4 +1,3 @@
-import { createClient } from '@supabase/supabase-js';
 import { Request, Response, NextFunction } from 'express';
 import { supabase } from './supabase/supabase';
 

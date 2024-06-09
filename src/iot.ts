@@ -1,4 +1,3 @@
-import { prisma } from '../app';
 import { Request, Response } from 'express';
 import express from 'express';
 import multer from 'multer';
