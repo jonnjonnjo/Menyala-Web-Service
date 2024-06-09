@@ -9,7 +9,7 @@ import { Request, Response } from 'express';
 import cors from 'cors';
 
 const app = express();
-const PORT = parseInt(process.env.PORT!) || 8012;;
+const PORT = parseInt(process.env.PORT!) || 3000;;
 
 app.use(express.json());
 app.use(cookieParser());
