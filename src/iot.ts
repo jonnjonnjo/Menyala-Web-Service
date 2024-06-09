@@ -45,34 +45,34 @@ iotRouter.post('/iot-cam', upload.single('imageFile'), async (req: Request, res:
 	});
 
 	if (fazaData.fire) {
-		supabase.from('Incident').insert({ iotCamId: data.id });
+		// console.log('There is a fire!');
+		await supabase.from('Incident').insert({ iotCamId: data.id });
 		return res.status(201).send('THERE IS A FIRE! Image and incident succesfully logged.');
 	}
 
 	return res.status(201).send('Image succesfully uploaded and logged.');
 });
 
-iotRouter.post("/iot-gas-temperature",async(req:Request,res:Response)=>{
-	const {gas,temperature} = req.body;
+iotRouter.post('/iot-gas-temperature', async (req: Request, res: Response) => {
+	const { gas, temperature } = req.body;
 
-	if(!gas || !temperature){
-		res.status(400).json({message:"There is no gas / temperature"})
+	if (!gas || !temperature) {
+		res.status(400).json({ message: 'There is no gas / temperature' });
 	}
 
 	// insert gas
-	const data = await supabase.from("IoTGasTemperature").insert({
+	const data = await supabase.from('IoTGasTemperature').insert({
 		gas,
-		temperature
-	})
+		temperature,
+	});
 
-
-	if(data){
-		res.status(200).json({message:"succes"})
-	}else{
-		res.status(400).json({message:"error"})
+	if (data) {
+		res.status(200).json({ message: 'succes' });
+	} else {
+		res.status(400).json({ message: 'error' });
 	}
-})
+});
 
-iotRouter.get("/data",authMiddleware,async(req:Request,res:Response)=>{
-	const getAllCam
-})
+iotRouter.get('/data', authMiddleware, async (req: Request, res: Response) => {
+	// const getAllCam;
+});
