@@ -29,6 +29,6 @@ app.get("/",(req:Request,res:Response)=>{
 		message:"HELLO"
 	})
 })
-app.listen(port,"0.0.0.0", () => {
+app.listen(port, () => {
 	console.log('Listening on port ', port);
 });
