@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 import { Prisma, PrismaClient } from '@prisma/client';
 import express from 'express';
 import router from './src/user';

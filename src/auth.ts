@@ -1,11 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
-import { prisma } from '../app';
 import { Request, Response, NextFunction } from 'express';
-
-export const supabase = createClient(
-	process.env.SUPABASE_URL!,
-	process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { supabase } from './supabase/supabase';
 
 export async function register(email: string, password: string) {
 	const { data, error } = await supabase.auth.signUp({
