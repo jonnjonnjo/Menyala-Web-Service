@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import express from 'express';
 import multer from 'multer';
 import { supabase } from './supabase/supabase';
+import { authMiddleware } from './auth';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -42,4 +43,8 @@ iotRouter.post("/iot-gas-temperature",async(req:Request,res:Response)=>{
 	}else{
 		res.status(400).json({message:"error"})
 	}
+})
+
+iotRouter.get("/data",authMiddleware,async(req:Request,res:Response)=>{
+	const getAllCam
 })

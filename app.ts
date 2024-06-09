@@ -9,7 +9,7 @@ import { Request,Response } from 'express';
 
 
 const app = express();
-const port = 8000;
+const port = 7000;
 export const prisma = new PrismaClient();
 
 app.use(express.json());
