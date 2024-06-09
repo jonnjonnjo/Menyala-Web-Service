@@ -4,10 +4,9 @@
 	"description": "",
 	"main": "app.ts",
 	"scripts": {
+		"start": "ts-node app.ts",
 		"dev": "nodemon app.ts",
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"build": "esbuild index=./src --bundle --minify --outdir=dist --packages=external --platform=node",
-		"start": "node dist"
+		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
 	"author": "",
