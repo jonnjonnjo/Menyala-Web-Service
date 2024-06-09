@@ -5,6 +5,8 @@ import express from 'express';
 import router from './src/user';
 import cookieParser from 'cookie-parser';
 import { iotRouter } from './src/iot';
+import { Request,Response } from 'express';
+
 
 const app = express();
 const port = 9012;
@@ -21,6 +23,11 @@ app.use('/user', router); // this is for user registration and login
 
 //app.get('/iot-data',authMiddleware, getWeeklyData)
 
+app.get("/",(req:Request,res:Response)=>{
+	res.json({
+		message:"HELLO"
+	})
+})
 app.listen(port, () => {
 	console.log('Listening on port ', port);
 });
