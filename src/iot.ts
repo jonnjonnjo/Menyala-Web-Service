@@ -70,9 +70,12 @@ iotRouter.post('/iot-gas-temperature', async (req: Request, res: Response) => {
 		.select('*')
 		.single();
 
-	console.log(data);
+	console.log('data: ', data);
+	console.log('error: ', error);
 
-	if (error) return res.status(400).json({ message: 'error' });
+	if (error) {
+		return res.status(400).json({ message: 'error' });
+	}
 	return res.status(201).json({ message: 'succes' });
 });
 
