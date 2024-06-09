@@ -13,6 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 model iotCam{
   id           Int      @id @default(autoincrement())
   base64Encode String

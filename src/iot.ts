@@ -1,7 +1,17 @@
 
 import { prisma } from "../app";
 import { Request, Response } from "express";
+import express from "express";
 
+export const iotRouter = express.Router()
+
+iotRouter.post("/iot-cam",async(req:Request,res:Response)=>{
+    const {base64encode} = req.body
+
+    // 
+})
+
+/*
 export async function insertIot(req:Request,res:Response){
     const body = req.body;
     
@@ -39,7 +49,7 @@ export async function getAllIotData(req:Request,res:Response){
     const alldata = await prisma.iotMeasurement.findMany()
     res.json(alldata)
 }
-
+*/
 type iotMeasurement = {
     id :number,
     temperature:number,
@@ -86,9 +96,7 @@ export async function getWeeklyData(req:Request,res:Response){
     }
 
     return res.json(newData)
-
-
-
-
-    
 }
+
+
+
