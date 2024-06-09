@@ -2,32 +2,25 @@ import { prisma } from '../app';
 import { Request, Response } from 'express';
 import express from 'express';
 import multer from 'multer';
+import { supabase } from './supabase/supabase';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 export const iotRouter = express.Router();
 
-iotRouter.post('/iot-cam', async (req: Request, res: Response) => {
-	const { base64encode } = req.body;
-
-	//
-});
-
-iotRouter.post('/uploadImage', upload.single('imageFile'), async (req: Request, res: Response) => {
+iotRouter.post('/iot-cam', upload.single('imageFile'), async (req: Request, res: Response) => {
 	if (!req.file) {
 		return res.status(400).send('No file uploaded.');
 	}
-
-	// The uploaded file is available in req.file
 	const file = req.file;
-
-	// Log the file data in base64
 	const base64Data = file.buffer.toString('base64');
-	console.log('Base64 Image Data:', base64Data);
 
-	// Send a response to the client
-	res.send('Image uploaded and logged in base64 format.');
+	const { error } = await supabase.from('IoTCam').insert({ base64Encode: base64Data });
+	if (error) {
+		return res.status(500).send(error);
+	}
+	res.status(201).send('Image uploaded and logged in base64 format.');
 });
 
 /*
