@@ -79,7 +79,7 @@ type sendData = {
 	base64encode:string|null,
 }
 
-iotRouter.get('/data', async (req: Request, res: Response) => {
+iotRouter.get('/data',authMiddleware, async (req: Request, res: Response) => {
 	const getAllCam = await supabase.from("IoTCam").select()
 											.order("id",{ascending:false})
 
@@ -150,10 +150,5 @@ iotRouter.get('/data', async (req: Request, res: Response) => {
 	res.status(200).json({
 		data:newData
 	})
-
-
-	
-
-
 
 });
