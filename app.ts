@@ -9,7 +9,7 @@ import { Request, Response } from 'express';
 import cors from 'cors';
 
 const app = express();
-const PORT = parseInt(process.env.PORT!) || 3000;
+const PORT = parseInt(process.env.PORT!) || 8012;;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -23,6 +23,6 @@ app.get('/', (req: Request, res: Response) => {
 		message: 'HELLO',
 	});
 });
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT,() => {
 	console.log('Listening on port ', PORT);
 });

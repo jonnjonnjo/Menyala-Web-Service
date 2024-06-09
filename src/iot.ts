@@ -77,6 +77,7 @@ type sendData = {
 	temperature:number|null,
 	createdAt:string,
 	base64encode:string|null,
+	incident:boolean,
 }
 
 iotRouter.get('/data',authMiddleware, async (req: Request, res: Response) => {
@@ -116,7 +117,6 @@ iotRouter.get('/data',authMiddleware, async (req: Request, res: Response) => {
 		return;
 	}
 
-
 	for(let i = 0 ;i < minim;i++){
 		const cd = camData[i];
 		const gt = gasTempData[i];
@@ -140,6 +140,7 @@ iotRouter.get('/data',authMiddleware, async (req: Request, res: Response) => {
 				temperature:gt.temperature,
 				createdAt:cd.created_at,
 				base64encode:cd.base64Encode,
+				incident:exist,
 			}
 
 			newData.push(toPush)
