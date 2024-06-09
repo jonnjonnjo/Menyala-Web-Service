@@ -53,6 +53,7 @@ iotRouter.post('/iot-cam', upload.single('imageFile'), async (req: Request, res:
 });
 
 iotRouter.post('/iot-gas-temperature', async (req: Request, res: Response) => {
+	console.log('POST /iot-gas-temperature');
 	const { gas, temperature } = req.body;
 
 	if (!gas || !temperature) {
@@ -60,95 +61,99 @@ iotRouter.post('/iot-gas-temperature', async (req: Request, res: Response) => {
 	}
 
 	// insert gas
-	const data = await supabase.from('IoTGasTemperature').insert({
-		gas,
-		temperature,
-	});
+	const { data, error } = await supabase
+		.from('IoTGasTemperature')
+		.insert({
+			gas,
+			temperature,
+		})
+		.select('*')
+		.single();
 
-	if (data) {
-		res.status(200).json({ message: 'succes' });
-	} else {
-		res.status(400).json({ message: 'error' });
-	}
+	console.log(data);
+
+	if (error) res.status(400).json({ message: 'error' });
+	res.status(201).json({ message: 'succes' });
 });
 
 type sendData = {
-	gas:number|null,
-	temperature:number|null,
-	createdAt:string,
-	base64encode:string|null,
-}
+	gas: number | null;
+	temperature: number | null;
+	createdAt: string;
+	base64encode: string | null;
+};
 
-iotRouter.get('/data',authMiddleware, async (req: Request, res: Response) => {
-	const getAllCam = await supabase.from("IoTCam").select()
-											.order("id",{ascending:false})
+iotRouter.get('/data', authMiddleware, async (req: Request, res: Response) => {
+	const getAllCam = await supabase.from('IoTCam').select().order('id', { ascending: false });
 
 	const camData = getAllCam.data;
 
-	const getAllGasTemp = await supabase.from("IoTGasTemperature").
-												select().order("id",{ascending:false})
+	const getAllGasTemp = await supabase
+		.from('IoTGasTemperature')
+		.select()
+		.order('id', { ascending: false });
 
 	const gasTempData = getAllGasTemp.data;
 
 	const minim = Math.min(camData?.length || 0, gasTempData?.length || 0, 120960);
 
-	const allIncident = await supabase.from("Incident").select()
+	const allIncident = await supabase.from('Incident').select();
 
-	let newData:sendData[] = []
+	let newData: sendData[] = [];
 
-	if(!gasTempData || !camData){
+	if (!gasTempData || !camData) {
 		res.status(400).json({
-			message:"Empty"
-		})
+			message: 'Empty',
+		});
 	}
-	
-	if(camData === null){
+
+	if (camData === null) {
 		res.status(400).json({
-			message:"Camera Data Empty"
-		})
+			message: 'Camera Data Empty',
+		});
 		return;
 	}
 
-	if(gasTempData === null){
+	if (gasTempData === null) {
 		res.status(400).json({
-			message:"Gas Temperature Empty"
-		})
+			message: 'Gas Temperature Empty',
+		});
 		return;
 	}
 
-
-	for(let i = 0 ;i < minim;i++){
+	for (let i = 0; i < minim; i++) {
 		const cd = camData[i];
 		const gt = gasTempData[i];
 
-		if(cd && gt ){
+		if (cd && gt) {
 			// find incident
-			
-			let exist = false
 
-			for(let j =0; j < (allIncident.data?.length === undefined ? 0 : allIncident.data.length);j++){
-				
-				if(allIncident.data === null){
+			let exist = false;
+
+			for (
+				let j = 0;
+				j < (allIncident.data?.length === undefined ? 0 : allIncident.data.length);
+				j++
+			) {
+				if (allIncident.data === null) {
 					break;
 				}
-				if(allIncident.data[j].iotCamId == cd.id){
-						exist = true
+				if (allIncident.data[j].iotCamId == cd.id) {
+					exist = true;
 				}
 			}
 			const toPush = {
-				gas:gt.gas,
-				temperature:gt.temperature,
-				createdAt:cd.created_at,
-				base64encode:cd.base64Encode,
-			}
+				gas: gt.gas,
+				temperature: gt.temperature,
+				createdAt: cd.created_at,
+				base64encode: cd.base64Encode,
+			};
 
-			newData.push(toPush)
-			
+			newData.push(toPush);
 		}
 	}
 
 	res.status(200).json({
-		data:newData
-	})
-
+		data: newData,
+	});
 });
