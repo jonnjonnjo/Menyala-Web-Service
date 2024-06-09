@@ -77,11 +77,12 @@ iotRouter.post('/iot-gas-temperature', async (req: Request, res: Response) => {
 });
 
 type sendData = {
-	gas: number | null;
-	temperature: number | null;
-	createdAt: string;
-	base64encode: string | null;
-};
+	gas:number|null,
+	temperature:number|null,
+	createdAt:string,
+	base64encode:string|null,
+	incident:boolean,
+}
 
 iotRouter.get('/data', authMiddleware, async (req: Request, res: Response) => {
 	const getAllCam = await supabase.from('IoTCam').select().order('id', { ascending: false });
@@ -121,7 +122,7 @@ iotRouter.get('/data', authMiddleware, async (req: Request, res: Response) => {
 		return;
 	}
 
-	for (let i = 0; i < minim; i++) {
+	for(let i = 0 ;i < minim;i++){
 		const cd = camData[i];
 		const gt = gasTempData[i];
 
@@ -143,11 +144,12 @@ iotRouter.get('/data', authMiddleware, async (req: Request, res: Response) => {
 				}
 			}
 			const toPush = {
-				gas: gt.gas,
-				temperature: gt.temperature,
-				createdAt: cd.created_at,
-				base64encode: cd.base64Encode,
-			};
+				gas:gt.gas,
+				temperature:gt.temperature,
+				createdAt:cd.created_at,
+				base64encode:cd.base64Encode,
+				incident:exist,
+			}
 
 			newData.push(toPush);
 		}
