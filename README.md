@@ -12,7 +12,7 @@
 
 ## Description
 
-Sistem ini merupakan web services dari ![Menyala](https://github.com/frendysanusi/menyala).
+Sistem ini merupakan web services dari [Menyala](https://github.com/frendysanusi/menyala).
 
 ## Group's Members
 
