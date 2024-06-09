@@ -23,6 +23,6 @@ app.get('/', (req: Request, res: Response) => {
 		message: 'HELLO',
 	});
 });
-app.listen(PORT,() => {
+app.listen(PORT,"0.0.0.0",() => {
 	console.log('Listening on port ', PORT);
 });
