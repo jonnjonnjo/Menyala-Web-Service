@@ -57,7 +57,7 @@ iotRouter.post('/iot-gas-temperature', async (req: Request, res: Response) => {
 	const { gas, temperature } = req.body;
 
 	if (!gas || !temperature) {
-		res.status(400).json({ message: 'There is no gas / temperature' });
+		return res.status(400).json({ message: 'There is no gas / temperature' });
 	}
 
 	// insert gas
@@ -72,17 +72,17 @@ iotRouter.post('/iot-gas-temperature', async (req: Request, res: Response) => {
 
 	console.log(data);
 
-	if (error) res.status(400).json({ message: 'error' });
-	res.status(201).json({ message: 'succes' });
+	if (error) return res.status(400).json({ message: 'error' });
+	return res.status(201).json({ message: 'succes' });
 });
 
 type sendData = {
-	gas:number|null,
-	temperature:number|null,
-	createdAt:string,
-	base64encode:string|null,
-	incident:boolean,
-}
+	gas: number | null;
+	temperature: number | null;
+	createdAt: string;
+	base64encode: string | null;
+	incident: boolean;
+};
 
 iotRouter.get('/data', authMiddleware, async (req: Request, res: Response) => {
 	const getAllCam = await supabase.from('IoTCam').select().order('id', { ascending: false });
@@ -103,26 +103,24 @@ iotRouter.get('/data', authMiddleware, async (req: Request, res: Response) => {
 	let newData: sendData[] = [];
 
 	if (!gasTempData || !camData) {
-		res.status(400).json({
+		return res.status(400).json({
 			message: 'Empty',
 		});
 	}
 
 	if (camData === null) {
-		res.status(400).json({
+		return res.status(400).json({
 			message: 'Camera Data Empty',
 		});
-		return;
 	}
 
 	if (gasTempData === null) {
-		res.status(400).json({
+		return res.status(400).json({
 			message: 'Gas Temperature Empty',
 		});
-		return;
 	}
 
-	for(let i = 0 ;i < minim;i++){
+	for (let i = 0; i < minim; i++) {
 		const cd = camData[i];
 		const gt = gasTempData[i];
 
@@ -144,18 +142,18 @@ iotRouter.get('/data', authMiddleware, async (req: Request, res: Response) => {
 				}
 			}
 			const toPush = {
-				gas:gt.gas,
-				temperature:gt.temperature,
-				createdAt:cd.created_at,
-				base64encode:cd.base64Encode,
-				incident:exist,
-			}
+				gas: gt.gas,
+				temperature: gt.temperature,
+				createdAt: cd.created_at,
+				base64encode: cd.base64Encode,
+				incident: exist,
+			};
 
 			newData.push(toPush);
 		}
 	}
 
-	res.status(200).json({
+	return res.status(200).json({
 		data: newData,
 	});
 });
